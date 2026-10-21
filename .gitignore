@@ -1,0 +1,16 @@
+# Credenciais do Firebase — NUNCA versionar
+serviceAccountKey.json
+*-firebase-adminsdk-*.json
+
+# Maven / IDEs
+target/
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+nbproject/private/
+out/
+bin/
+.DS_Store
