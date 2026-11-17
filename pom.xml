@@ -7,30 +7,18 @@
     <groupId>br.edu.unijorge</groupId>
     <artifactId>urna-cidada</artifactId>
     <version>1.0.0</version>
-    <packaging>jar</packaging>
-
-    <name>Urna Cidadã</name>
-    <description>Simulador educativo de urna eletrônica (Java Swing + Firebase Cloud Firestore)</description>
 
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <main.class>br.edu.unijorge.urnacidada.Main</main.class>
     </properties>
 
     <dependencies>
-        <!-- Firebase Admin SDK (inclui o cliente do Cloud Firestore) -->
+        <!-- Firebase (inclui o Cloud Firestore) -->
         <dependency>
             <groupId>com.google.firebase</groupId>
             <artifactId>firebase-admin</artifactId>
             <version>9.4.3</version>
-        </dependency>
-
-        <!-- Logs do Firebase no console -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>2.0.16</version>
         </dependency>
 
         <!-- Testes -->
@@ -49,49 +37,14 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.2</version>
             </plugin>
-
-            <!-- mvn exec:java  -> roda o programa direto pelo Maven -->
+            <!-- mvn exec:java  -> abre a urna -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.5.0</version>
                 <configuration>
-                    <mainClass>${main.class}</mainClass>
+                    <mainClass>br.edu.unijorge.urnacidada.Main</mainClass>
                 </configuration>
-            </plugin>
-
-            <!-- mvn package -> gera target/urna-cidada.jar executável (com todas as dependências) -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.6.0</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals><goal>shade</goal></goals>
-                        <configuration>
-                            <finalName>urna-cidada</finalName>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>${main.class}</mainClass>
-                                </transformer>
-                                <!-- Necessário para o gRPC usado pelo Firestore -->
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-                            </transformers>
-                            <filters>
-                                <filter>
-                                    <artifact>*:*</artifact>
-                                    <excludes>
-                                        <exclude>META-INF/*.SF</exclude>
-                                        <exclude>META-INF/*.DSA</exclude>
-                                        <exclude>META-INF/*.RSA</exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
