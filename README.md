@@ -34,6 +34,9 @@ mvn exec:java   # abre a urna
 
 > 🔒 Não envie o `serviceAccountKey.json` para o GitHub. Ele já está no `.gitignore`.
 
+**Modo offline:** se o arquivo não for encontrado, a urna abre mesmo assim, com um aviso e
+"MODO OFFLINE" no título. Os votos ficam só na memória (`MemoriaVotoRepository`).
+
 Cada voto vira um documento na coleção **`votos`**:
 
 | Campo       | Exemplo                                   |
@@ -65,7 +68,7 @@ src/main/java/br/edu/unijorge/urnacidada/
 ├── model/                       Partido, Candidato, CandidatoProporcional, CandidatoMajoritario,
 │                                Cargo, CargoProporcional, CargoMajoritario, Voto, TipoVoto
 ├── data/DadosEleicao.java       partidos e candidatos fictícios
-├── repository/                  VotoRepository (interface) e FirestoreVotoRepository
+├── repository/                  VotoRepository (interface), FirestoreVotoRepository, MemoriaVotoRepository
 ├── service/UrnaService.java     regras da urna (digitar, corrigir, branco, confirmar)
 └── view/TelaUrna.java           janela Swing
 src/test/java/.../UrnaServiceTest.java   testes JUnit 5
@@ -77,7 +80,7 @@ src/test/java/.../UrnaServiceTest.java   testes JUnit 5
 |---|---|
 | **Encapsulamento** | Atributos `private` com getters em `Partido`, `Candidato`, `Cargo` e `Voto`. O estado da urna só muda pelos métodos de `UrnaService`. |
 | **Herança** | `CandidatoProporcional` e `CandidatoMajoritario` estendem `Candidato`. `CargoProporcional` e `CargoMajoritario` estendem `Cargo`. `TelaUrna` estende `JFrame`. |
-| **Polimorfismo** | `Cargo.interpretar(numero)`: o proporcional aceita voto de legenda, o majoritário não. `Candidato.getInfoExtra()`: o majoritário mostra o vice. |
+| **Polimorfismo** | `Cargo.interpretar(numero)`: o proporcional aceita voto de legenda, o majoritário não. `Candidato.getInfoExtra()`: o majoritário mostra o vice. `VotoRepository`: a urna grava no Firestore ou na memória sem mudar nada. |
 | **Abstração** | Classes abstratas `Candidato` e `Cargo`; interface `VotoRepository`. |
 
 ## Diagrama de classes
@@ -115,6 +118,7 @@ classDiagram
         +salvar(Voto)
     }
     VotoRepository <|.. FirestoreVotoRepository
+    VotoRepository <|.. MemoriaVotoRepository
 
     UrnaService --> Cargo
     UrnaService --> VotoRepository
